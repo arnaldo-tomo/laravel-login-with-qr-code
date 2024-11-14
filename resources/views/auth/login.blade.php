@@ -43,5 +43,11 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+        <div class="w-full h-1 border-b my-8"></div>
+
+        <div class="block text-center">
+            <livewire:login-with-qr-code/>
+        </div>
     </form>
 </x-guest-layout>

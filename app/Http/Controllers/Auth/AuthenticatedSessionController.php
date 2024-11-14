@@ -29,6 +29,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $request->user()
+            ->userSessions()
+            ->create([
+                'session_id' => $request->session()->getId(),
+                'ip_address' => $request->getClientIp(),
+                'user_agent' => $request->userAgent(),
+                'last_activity' => now()
+            ]);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -37,6 +46,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $request->user()
+            ->userSessions()
+            ->where('session_id', $request->session()->getId())
+            ->delete();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
